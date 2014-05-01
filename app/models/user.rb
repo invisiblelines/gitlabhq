@@ -273,7 +273,7 @@ class User < ActiveRecord::Base
   def authorized_groups
     @authorized_groups ||= begin
                              group_ids = (groups.pluck(:id) + authorized_projects.pluck(:namespace_id))
-                             Group.where(id: group_ids).order('namespaces.name ASC')
+                             Group.where(id: group_ids).order('LOWER(namespaces.name) ASC')
                            end
   end
 

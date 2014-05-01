@@ -166,6 +166,16 @@ describe User do
     it { @user.several_namespaces?.should be_true }
     it { @user.authorized_groups.should == [@group] }
     it { @user.owned_groups.should == [@group] }
+
+    it 'order is not case-sensitive' do
+      other_group = create :group, name: 'Gitlab'
+      other_group.add_owner(@user)
+      
+      another_group = create :group, name: 'gitlabhq'
+      another_group.add_owner(@user)
+
+      @user.authorized_groups.should == [other_group, another_group, @group]
+    end
   end
 
   describe 'group multiple owners' do
@@ -328,7 +338,7 @@ describe User do
       user.all_ssh_keys.should include(key.key)
     end
   end
-    
+
   describe :avatar_type do
     let(:user) { create(:user) }
 
